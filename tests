@@ -1,0 +1,21 @@
+?- type([tint, arrow(tint, [tint, tbool])]).
+true.
+
+?- type([tint, arrow(typevar(t), [tint, tbool])]).
+true.
+
+?- hastype([], let_in_end(simple_def(var(x), 5), let_in_end(simple_def(var(y), 4), mul(var(y), var(x)))), T).
+
+?- hastype([(var(x), tbool)], let_in_end(simple_def(var(x), 5), let_in_end(simple_def(var(y), 4), mul(var(y), var(x)))), T).
+
+?- hastype([(var(x), tint), (var(y), tint)], let_in_end(par_def(simple_def(var(x), var(y)), simple_def(var(y), var(x))), add(var(x), var(y))), T).
+T = tint ;
+false.
+
+?- hastype([(var(x), tbool), (var(y), tint)], let_in_end(par_def(simple_def(var(x), var(y)), simple_def(var(y), var(x))), if_then_else(var(y), var(x), 5)), T).
+T = tint ;
+false.
+
+?- hastype([(var(x), tbool), (var(y), tint)], let_in_end(par_def(simple_def(var(x), var(y)), simple_def(var(y), var(x))), if_then_else(var(x), var(5), 5)), T).
+false.
+
