@@ -1,0 +1,3 @@
+exhaustive testing for simple cases
+more advanced testing for corner cases showing how augmentation etc works
+Note that this checker can work as a type inference engine.  However it does not work for polymorphic type inference.  Show with counter-examples that this is the case.
