@@ -22,4 +22,13 @@ false.
 ?- hastype([], let_in_end(par_def(simple_def(var(x), 5), simple_def(var(x), 2)), var(x)), T).
 false.
 
+?- hastype([],let_in_end(simple_def(var(f), func_abstr(var(x), var(x))), [func(var(f), 3), func(var(f), true)]),T).
+false.
+
+?- hastype([],let_in_end(simple_def(var(f), func_abstr(var(x), var(x))), [func(var(f), 3), func(var(f), true)]), T).
+false.
+
+?- hastype([],let_in_end(simple_def(var(f), func_abstr(var(x), var(x))), [func(var(f), 3)]), T).
+T = [tint] ;
+false.
 
