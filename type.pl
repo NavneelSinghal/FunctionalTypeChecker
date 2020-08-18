@@ -47,7 +47,6 @@ expr(sub(X, Y)) :-
     expr(X), expr(Y).
 
 /* bool_ops */
-
 expr(and(X, Y)) :-
     expr(X), expr(Y).
 

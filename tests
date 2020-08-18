@@ -16,7 +16,7 @@ false.
 T = tint ;
 false.
 
-?- hastype([(var(x), tbool), (var(y), tint)], let_in_end(par_def(simple_def(var(x), var(y)), simple_def(var(y), var(x))), if_then_else(var(x), var(5), 5)), T).
+?- hastype([(var(x), tbool), (var(y), tint)], let_in_end(par_def(simple_def(var(x), var(y)), simple_def(var(y), var(x))), if_then_else(var(x), var(y), 5)), T).
 false.
 
 ?- hastype([], let_in_end(par_def(simple_def(var(x), 5), simple_def(var(x), 2)), var(x)), T).
