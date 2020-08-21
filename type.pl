@@ -21,10 +21,10 @@ type([T1 | L]) :-
 /* equality_types: checking whether the types can have equality defined on them; these types are tint or tbool or tuples of types which have equality defined on them */
 equality_type(tint).
 equality_type(tbool).
-equality_type(tuple([])).
-equality_type(tuple([A | L])) :-
+equality_type([]).
+equality_type([A | L]) :-
     equality_type(A),
-    equality_type(tuple(L)).
+    equality_type(L).
 
 /* FORMAL EXPRESSION DEFINITIONS_HERE - never used, just for the specification */
 
@@ -76,11 +76,15 @@ augment(L1, [], L1).
 augment(L1, [X | XS], [X | YS]) :-
     augment(L1, XS, YS).
 
+look([(X, T) | _], X, T) :- !.
+look([(X, _) | _], X, _) :- !, fail.
+look([_ | Y], X, T) :- look(Y, X, T).
+
 /* TYPE CHECKING STARTS. hastype(Gamma, E, T) type-checks the expression E with type T */
 
 /* variables */
 hastype(Gamma, var(X), T) :-
-    contains(Gamma, (var(X), T)).
+    look(Gamma, var(X), T).
 
 /* constants */
 hastype(_, X, tint) :-

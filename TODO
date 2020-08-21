@@ -1,5 +1,0 @@
-exhaustive testing for simple cases
-more advanced testing for corner cases showing how augmentation etc works
-Note that this checker can work as a type inference engine.  However it does not work for polymorphic type inference.  Show with counter-examples that this is the case.
-maybe implement the replacement thing (instead of just relying on the opposite order) - note that augment is used in finding the defined variables as well
-write out the full expr specifications

@@ -4,6 +4,10 @@ true.
 ?- type([tint, arrow(typevar(t), [tint, tbool])]).
 true.
 
+?- hastype([(var(x), tint), (var(x), tbool)], var(x), T).
+T = tint ;
+false.
+
 ?- hastype([], let_in_end(simple_def(var(x), 5), let_in_end(simple_def(var(y), 4), mul(var(y), var(x)))), T).
 
 ?- hastype([(var(x), tbool)], let_in_end(simple_def(var(x), 5), let_in_end(simple_def(var(y), 4), mul(var(y), var(x)))), T).
@@ -32,3 +36,153 @@ false.
 T = [tint] ;
 false.
 
+?- hastype([(var(x), tbool), (var(y), tint)], let_in_end(par_def(simple_def(var(x), var(y)), simple_def(var(y), var(x))), if_then_else(var(x), var(y), var(y))), T).
+false.
+
+?- hastype([(var(x), tbool), (var(y), tint)], let_in_end(par_def(simple_def(var(x), var(y)), simple_def(var(y), var(x))), if_then_else(var(y), var(y), var(y))), T).
+T = tbool ;
+false.
+
+?- hastype([(var(x), tint)], let_in_end(simple_def(var(x), true), if_then_else(var(x), 1, 2)), T).
+T = tint ;
+false.
+
+?- hastype([(var(x), tint)], let_in_end(simple_def(var(x), true), if_then_else(var(x), 1, true)), T).
+false.
+
+?- hastype([(var(x), tint)], let_in_end(simple_def(var(x), true), if_then_else(var(x), 1, 2)), T).
+T = tint .
+
+?- hastype([], eq([1, 2, true], [3, 4, false]), T).
+T = tbool.
+
+?- hastype([], eq([1, 2, [true]], [3, 4, false]), T).
+false.
+
+?- hastype([], eq([1, 2, [true]], [3, 4, [false]]), T).
+T = tbool.
+
+?- hastype([], func_abstr(var(x), add(var(x), 5)), T).
+T = arrow(tint, tint) .
+
+?- hastype([], func_abstr(var(x), eq(var(x), var(x))), T).
+T = arrow(tint, tbool) ;
+T = arrow(tbool, tbool) ;
+T = arrow([], tbool) ;
+T = arrow([tint|tint], tbool) ;
+T = arrow([tint|tbool], tbool) ;
+T = arrow([tint], tbool) ;
+T = arrow([tint, tint|tint], tbool) ;
+T = arrow([tint, tint|tbool], tbool) ;
+T = arrow([tint, tint], tbool) ;
+T = arrow([tint, tint, tint|tint], tbool) ;
+T = arrow([tint, tint, tint|tbool], tbool) ;
+T = arrow([tint, tint, tint], tbool) ;
+T = arrow([tint, tint, tint, tint|tint], tbool) ;
+T = arrow([tint, tint, tint, tint|tbool], tbool) ;
+T = arrow([tint, tint, tint, tint], tbool) ;
+T = arrow([tint, tint, tint, tint, tint|tint], tbool) ;
+T = arrow([tint, tint, tint, tint, tint|tbool], tbool) ;
+T = arrow([tint, tint, tint, tint, tint], tbool) ;
+T = arrow([tint, tint, tint, tint, tint, tint|tint], tbool) ;
+T = arrow([tint, tint, tint, tint, tint, tint|tbool], tbool) ;
+T = arrow([tint, tint, tint, tint, tint, tint], tbool) ;
+T = arrow([tint, tint, tint, tint, tint, tint, tint|tint], tbool) ;
+T = arrow([tint, tint, tint, tint, tint, tint, tint|tbool], tbool) ;
+T = arrow([tint, tint, tint, tint, tint, tint, tint], tbool) ;
+T = arrow([tint, tint, tint, tint, tint, tint, tint, tint|...], tbool) .
+
+?- hastype([], proj([1,2,3,4], 1), tint).
+true.
+
+?- hastype([], proj([1,2,3,4], 1), T).
+T = tint.
+
+?- hastype([], proj([[1,2,[]],3,true], 1), T).
+T = [tint, tint, []].
+
+?- hastype([], or(X, Y), T).
+X = Y, Y = true,
+T = tbool ;
+X = true,
+Y = false,
+T = tbool ;
+X = true,
+Y = and(true, true),
+T = tbool ;
+X = true,
+Y = and(true, false),
+T = tbool ;
+X = true,
+Y = and(true, and(true, true)),
+T = tbool ;
+X = true,
+Y = and(true, and(true, false)),
+T = tbool ;
+X = true,
+Y = and(true, and(true, and(true, true))),
+T = tbool ;
+X = true,
+Y = and(true, and(true, and(true, false))),
+T = tbool ;
+X = true,
+Y = and(true, and(true, and(true, and(true, true)))),
+T = tbool ;
+X = true,
+Y = and(true, and(true, and(true, and(true, false)))),
+T = tbool .
+
+?- hastype([], or(true, false), T).
+T = tbool.
+
+?- hastype([], or(true, and(false, true)), T).
+T = tbool.
+
+?- hastype([], func(func_abstr(var(x), 2), 1), T).
+T = tint.
+
+?- hastype([], let_in_end(simple_def(var(x), 2), let_in_end(simple_def(var(f), func_abstr(var(x), add(var(x), 2))), let_in_end(simple_def(var(x), 1), func(var(f), 3)))), T).
+T = tint ;
+false.
+
+?- hastype([], let_in_end(simple_def(var(x), 2), let_in_end(simple_def(var(f), func_abstr(var(x), add(var(x), 2))), let_in_end(simple_def(var(x), 1), func(var(f), false)))), T).
+false.
+
+?- type([tint, arrow(tint, [tint, tbool])]).
+true.
+
+?- type([tint, arrow(typevar(t), [tint, tbool])]).
+true.
+
+?- hastype([], let_in_end(simple_def(var(x), 5), let_in_end(simple_def(var(y), 4), mul(var(y), var(x)))), T).
+T = tint ;
+false.
+
+?- hastype([(var(x), tbool)], let_in_end(simple_def(var(x), 5), let_in_end(simple_def(var(y), 4), mul(var(y), var(x)))), T).
+T = tint .
+
+?- hastype([(var(x), tbool)], let_in_end(simple_def(var(x), 5), let_in_end(simple_def(var(y), 4), mul(var(y), var(x)))), T).
+T = tint ;
+false.
+
+?- hastype([(var(x), tint), (var(y), tint)], let_in_end(par_def(simple_def(var(x), var(y)), simple_def(var(y), var(x))), add(var(x), var(y))), T).
+T = tint ;
+false.
+
+?- hastype([], let_in_end(seq_def(simple_def(var(x), 2), simple_def(var(f), func_abstr(var(y), add(var(y), var(x))))), func(var(f), 4)), T).
+T = tint ;
+false.
+
+?- hastype([], let_in_end(local_in_end(simple_def(var(x), 2), simple_def(var(f), func_abstr(var(y), add(var(y), var(x))))), func(var(f), 4)), T).
+T = tint ;
+false.
+
+// polymorphism test cases
+
+
+?- hastype([], let_in_end(simple_def(var(id), func_abstr(var(x), var(x))), [func(var(id), 1), func(var(id), true)]), T).
+false.
+
+?- hastype([], let_in_end(simple_def(var(id), func_abstr(var(x), var(x))), [func(var(id), 1), func(var(id), 1)]), T).
+T = [tint, tint] ;
+false.
